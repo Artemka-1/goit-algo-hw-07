@@ -15,6 +15,8 @@ def input_error(func):
             return "ата-та-та неправильный тип данных."
         except Exception as e:
             return f"Непредвиденная ошибочка: {e}"
+        except IndexError:
+            return f"ошибка {e}"
     return inner
 
 
