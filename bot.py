@@ -144,6 +144,22 @@ def add_contact(args, book: AddressBook):
         book.add_record(record)
     record.add_phone(phone)
     return f"Contact {name} added/updated."
+    
+    while True:
+    command = input("Enter a command: ").strip()
+    if not command:
+        continue
+
+    parts = command.split()
+    cmd = parts[0].lower()   # игнорируем регистр команды
+    args = parts[1:]         # остальные части — аргументы
+
+    if cmd == "add":
+        print(add_contact(args))
+    elif cmd == "exit":
+        break
+    else:
+        print(f"Unknown command: {cmd}")
 
 def change_contact(args, book: AddressBook):
     if len(args) != 3:
