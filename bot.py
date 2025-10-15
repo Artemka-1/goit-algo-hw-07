@@ -6,7 +6,7 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
         except KeyError:
-            return "Ошибка этот контакт не найден"
+            return "Ошибка: этот контакт не найден"
         except ValueError as e:
             return f"Ошибочка: {e}"
         except IndexError:
@@ -15,9 +15,8 @@ def input_error(func):
             return "ата-та-та неправильный тип данных."
         except Exception as e:
             return f"Непредвиденная ошибочка: {e}"
-        except IndexError:
-            return f"ошибка {e}"
     return inner
+
 
 
 class Field:
@@ -146,22 +145,6 @@ def add_contact(args, book: AddressBook):
         book.add_record(record)
     record.add_phone(phone)
     return f"Contact {name} added/updated."
-    
-    while True:
-    command = input("Enter a command: ").strip()
-    if not command:
-        continue
-
-    parts = command.split()
-    cmd = parts[0].lower()   # игнорируем регистр команды
-    args = parts[1:]         # остальные части — аргументы
-
-    if cmd == "add":
-        print(add_contact(args))
-    elif cmd == "exit":
-        break
-    else:
-        print(f"Unknown command: {cmd}")
 
 def change_contact(args, book: AddressBook):
     if len(args) != 3:
@@ -188,7 +171,7 @@ def all_contacts(book: AddressBook):
 
 def add_birthday(args, book: AddressBook):
     if len(args) != 2:
-        return "Usage: add-birthday <name> <YYYY-MM-DD>"
+        return "Usage: add-birthday <name> <DD.MM.YYYY>"
     name, bday = args
     record = book.find(name)
     if not record:
@@ -213,35 +196,40 @@ def main():
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
-        command, *args = parse_input(user_input)
+        command, args = parse_input(user_input)
+
         if command in ["close", "exit"]:
             print("Good bye!")
             break
+
         elif command == "hello":
             print("Hello! How can I help you?")
+
         elif command == "add":
             print(add_contact(args, book))
+
         elif command == "change":
             print(change_contact(args, book))
+
         elif command == "phone":
             print(phone_username(args, book))
+
         elif command == "show" and args and args[0] == "all":
             print(all_contacts(book))
+
         elif command == "add-birthday":
             print(add_birthday(args, book))
+
         elif command == "show-birthday":
             print(show_birthday(args, book))
+
         elif command == "birthdays":
             upcoming = book.get_upcoming_birthdays()
-        elif command == "all":
-            print(all_contacts(book))
             if upcoming:
                 for item in upcoming:
                     print(f"{item['name']} -> {item['birthday']}")
             else:
                 print("No upcoming birthdays in next 7 days")
+
         else:
             print("Invalid command")
-
-if __name__ == "__main__":
-    main()
