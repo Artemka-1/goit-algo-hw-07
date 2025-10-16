@@ -1,4 +1,3 @@
-
 def main():
     book = load_data()
     print("Welcome to the assistant bot!")
