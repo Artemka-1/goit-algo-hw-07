@@ -1,7 +1,7 @@
 from datetime import datetime, date, timedelta
 from collections import UserDict
 
-# Декоратор для обработки ошибок
+
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -16,7 +16,7 @@ def input_error(func):
             return "Incorrect type of arguments."
     return inner
 
-# Базовый класс для всех полей
+
 class Field:
     def __init__(self, value):
         self.value = value
@@ -40,7 +40,7 @@ class Birthday(Field):
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
         super().__init__(value)
 
-# Класс записи контакта
+
 class Record:
     def __init__(self, name: str):
         self.name = Name(name)
@@ -89,7 +89,7 @@ class Record:
         bday = f", birthday: {self.birthday.value}" if self.birthday else ""
         return f"{self.name.value}: {phones}{bday}"
 
-# Класс адресной книги
+
 class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data[record.name.value] = record
@@ -122,14 +122,14 @@ class AddressBook(UserDict):
                 result.append({"name": record.name.value, "birthday": next_bday.strftime("%d.%m.%Y")})
         return result
 
-# Парсер команд
+
 def parse_input(user_input: str):
     parts = user_input.strip().split()
     if not parts:
         return "", []
     return parts[0].lower(), parts[1:]
 
-# Обработчики команд
+
 @input_error
 def add_contact(args, book: AddressBook):
     name, phone, *_ = args
@@ -184,7 +184,7 @@ def birthdays(args, book: AddressBook):
         return "No upcoming birthdays in next 7 days."
     return "\n".join(f"{item['name']} -> {item['birthday']}" for item in upcoming)
 
-# Основной цикл бота
+
 def main():
     book = AddressBook()
     print("Welcome to the assistant bot!")
