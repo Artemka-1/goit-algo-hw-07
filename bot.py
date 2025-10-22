@@ -18,24 +18,20 @@ def input_error(func):
     return inner
 
 
-
 class Field:
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return str(self.value)
 
-
 class Name(Field):
     pass
-
 
 class Phone(Field):
     def __init__(self, value: str):
         if not (value.isdigit() and len(value) == 10):
             raise ValueError("Phone number must be exactly 10 digits.")
         super().__init__(value)
-
 
 class Birthday(Field):
     def __init__(self, value: str):
@@ -44,7 +40,6 @@ class Birthday(Field):
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
         super().__init__(value)
-
 
 class Record:
     def __init__(self, name: str):
@@ -65,11 +60,8 @@ class Record:
     def edit_phone(self, old_phone: str, new_phone: str):
         for p in self.phones:
             if p.value == old_phone:
-                try:
-                    new_p = Phone(new_phone)
-                except ValueError as e:
-                    raise ValueError(f"Invalid new phone: {e}")
-                p.value = new_p.value  # Заменяем значение только если корректно
+                self.phones.remove(p)
+                self.phones.append(Phone(new_phone))
                 return
         raise ValueError("Old phone number not found.")
 
@@ -129,12 +121,9 @@ class AddressBook(UserDict):
                 result.append({"name": record.name.value, "birthday": next_bday.strftime("%d.%m.%Y")})
         return result
 
-
-
 def save_data(book, filename="addressbook.pkl"):
     with open(filename, "wb") as f:
         pickle.dump(book, f)
-
 
 def load_data(filename="addressbook.pkl"):
     try:
@@ -144,13 +133,11 @@ def load_data(filename="addressbook.pkl"):
         return AddressBook()
 
 
-
 def parse_input(user_input: str):
     parts = user_input.strip().split()
     if not parts:
         return "", []
     return parts[0].lower(), parts[1:]
-
 
 
 @input_error
@@ -166,7 +153,6 @@ def add_contact(args, book: AddressBook):
         record.add_phone(phone)
     return message
 
-
 @input_error
 def change_contact(args, book: AddressBook):
     name, old_phone, new_phone = args
@@ -176,7 +162,6 @@ def change_contact(args, book: AddressBook):
     record.edit_phone(old_phone, new_phone)
     return f"Phone for {name} changed."
 
-
 @input_error
 def show_phone(args, book: AddressBook):
     name = args[0]
@@ -184,7 +169,6 @@ def show_phone(args, book: AddressBook):
     if not record:
         raise KeyError
     return "; ".join(p.value for p in record.phones)
-
 
 @input_error
 def add_birthday(args, book: AddressBook):
@@ -195,7 +179,6 @@ def add_birthday(args, book: AddressBook):
     record.add_birthday(bday)
     return f"Birthday for {name} added: {bday}"
 
-
 @input_error
 def show_birthday(args, book: AddressBook):
     name = args[0]
@@ -203,7 +186,6 @@ def show_birthday(args, book: AddressBook):
     if not record:
         raise KeyError
     return f"{name}'s birthday: {record.birthday.value}" if record.birthday else f"{name} has no birthday set."
-
 
 @input_error
 def birthdays(args, book: AddressBook):
@@ -243,13 +225,6 @@ def main():
         else:
             print("Invalid command.")
 
-
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nSaving data before exit...")
-        book = load_data()
-        save_data(book)
-        print("Data saved. Goodbye!")
+    main()
 
