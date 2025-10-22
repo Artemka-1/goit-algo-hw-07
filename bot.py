@@ -2,7 +2,6 @@ import pickle
 from datetime import datetime, date, timedelta
 from collections import UserDict
 
-
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -16,7 +15,6 @@ def input_error(func):
         except TypeError:
             return "Incorrect type of arguments."
     return inner
-
 
 class Field:
     def __init__(self, value):
@@ -89,7 +87,6 @@ class Record:
         bday = f", birthday: {self.birthday.value}" if self.birthday else ""
         return f"{self.name.value}: {phones}{bday}"
 
-
 class AddressBook(UserDict):
     def add_record(self, record: Record):
         self.data[record.name.value] = record
@@ -131,7 +128,6 @@ def load_data(filename="addressbook.pkl"):
             return pickle.load(f)
     except FileNotFoundError:
         return AddressBook()
-
 
 def parse_input(user_input: str):
     parts = user_input.strip().split()
@@ -227,4 +223,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
